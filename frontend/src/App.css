@@ -1,0 +1,208 @@
+/* Base styles for the entire app */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f2f2f2;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Styles for the header section */
+.app-header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+/* Title styles */
+.app-title {
+  font-size: 36px;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Content styles */
+.app-content {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Input styles */
+.input-row {
+  margin-bottom: 30px;
+}
+
+.input-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 16px;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+}
+
+/* Button styles */
+.button-row {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.button {
+  padding: 15px 30px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.recommend-button,
+.back-button,
+.submit-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.recommend-button:hover,
+.back-button:hover,
+.submit-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Recommendation styles */
+.recommendation {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* Footer styles */
+.app-footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styles */
+.car-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.car-table th,
+.car-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.car-table th {
+  background-color: #f2f2f2;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.car-table td {
+  font-size: 14px;
+}
+
+.car-table button {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.car-table button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.car-details {
+  text-align: center;
+}
+
+.car-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.car-item {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+.car-info {
+  margin-bottom: 20px;
+}
+
+.car-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.car-image img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.button-row {
+  margin-top: 20px;
+}
+
+.back-button {
+  padding: 12px 30px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
