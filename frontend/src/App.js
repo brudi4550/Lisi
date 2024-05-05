@@ -83,6 +83,7 @@ function App() {
     try {
       const fetchedCars = await fetchRecommendedCars(userData);
       setRecommendedCars(fetchedCars);
+      sendUserDataToBackend(userData);
       setCurrentPage('recommendation');
     } catch (error) {
       console.error('Error fetching recommendation:', error);
@@ -119,7 +120,12 @@ function App() {
   };
 
   const sendUserDataToBackend = async (userData) => {
-    await axios.post('/user', userData);
+    try {
+      console.log('sending user data')
+      await axios.post('http://localhost:3000/user', userData);
+    } catch (e) {
+      console.log(e)
+    }
   };
 
   const handleSelectCar = async (car) => {
@@ -185,7 +191,7 @@ function App() {
 
   const handleSendMessage = async (message) => {
     setChatMessages([...chatMessages, { sender: 'user', message }]);
-    
+
     try {
       const response = await axios.post('/questions', { question: message });
       const responseData = response.data;

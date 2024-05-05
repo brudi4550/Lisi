@@ -14,6 +14,7 @@ var user;
 
 router
   .post("/user", (req, res) => {
+    console.log("received request");
     if (req.query === null)
       return res
         .status(400)
