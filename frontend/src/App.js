@@ -242,14 +242,14 @@ function App() {
               </select>
             </div>
             <div className="input-row">
-              <label className="input-label">Price:</label>
-              <select name="price" value={userData.fuelType} onChange={handleInputChange} className="input-field">
+              <label className="input-label">Price Preference:</label>
+              <select name="price" value={userData.pricePreference} onChange={handleInputChange} className="input-field">
                 <option value="">Select</option>
-                <option value="Electro">Electric</option>
-                <option value="Gas">Gasoline</option>
-                <option value="Patrol">Diesel</option>
-                <option value="Patrol">Hybrid</option>
-                <option value="Patrol">Mulitple</option>
+                <option value="Electro">Less then 10.000</option>
+                <option value="Gas">10.000 - 20.000</option>
+                <option value="Patrol">20.000 - 30.000</option>
+                <option value="Patrol">30.000 - 40.000</option>
+                <option value="Patrol">More then 40.000</option>
               </select>
             </div>
             <div className="input-row">
