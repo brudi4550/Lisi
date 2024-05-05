@@ -1,5 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
+
+function ChatWindow({ onSendMessage, chatMessages }) {
+  const [message, setMessage] = useState('');
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const handleSendMessage = () => {
+    if (message.trim() !== '') {
+      onSendMessage(message);
+      setMessage('');
+    }
+  };
+
+  return (
+    <div className="chat-window">
+      <div className="chat-messages">
+        {chatMessages.map((msg, index) => (
+          <div key={index} className={`message ${msg.sender === 'user' ? 'user-message' : 'bot-message'}`}>
+            <p>{msg.message}</p>
+          </div>
+        ))}
+      </div>
+      <textarea
+        className="chat-input"
+        value={message}
+        onChange={handleMessageChange}
+        placeholder="Type your message..."
+      />
+      <button className="chat-button" onClick={handleSendMessage}>
+        Send
+      </button>
+    </div>
+  );
+}
 
 function App() {
   const [userData, setUserData] = useState({
@@ -8,6 +45,7 @@ function App() {
     preferences: '',
     fuelType: '',
     environmentalAwareness: '',
+    pricePreference: '',
   });
   const [recommendedCars, setRecommendedCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
@@ -15,6 +53,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('');
+  const [chatMessages, setChatMessages] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,9 +118,23 @@ function App() {
     });
   };
 
-  const handleSelectCar = (car) => {
+  const sendUserDataToBackend = async (userData) => {
+    await axios.post('/user', userData);
+  };
+
+  const handleSelectCar = async (car) => {
+    try {
+      await sendCarToBackend(car);
+      console.log("Car successfully sent to backend:", car);
+    } catch (error) {
+      console.error("Error sending car to backend:", error);
+    }
     setSelectedCars([...selectedCars, car]);
     setCurrentPage('carDetails');
+  };
+
+  const sendCarToBackend = async (car) => {
+    await axios.post('/recommendations', car);
   };
 
   const handleBackButton = () => {
@@ -110,6 +163,43 @@ function App() {
     }
   };
 
+  const handleSort = (sortBy) => {
+    switch (sortBy) {
+      case 'name':
+        setRecommendedCars([...recommendedCars].sort((a, b) => a.name.localeCompare(b.name)));
+        break;
+      case 'price':
+        setRecommendedCars([...recommendedCars].sort((a, b) => parseFloat(a.price.replace('$', '').replace(',', '')) - parseFloat(b.price.replace('$', '').replace(',', ''))));
+        break;
+      case 'fuelType':
+        setRecommendedCars([...recommendedCars].sort((a, b) => a.fuelType.localeCompare(b.fuelType)));
+        break;
+      case 'transmission':
+        setRecommendedCars([...recommendedCars].sort((a, b) => a.transmission.localeCompare(b.transmission)));
+        break;
+      default:
+        console.log(`Sorting by ${sortBy}`);
+        break;
+    }
+  };
+
+  const handleSendMessage = async (message) => {
+    setChatMessages([...chatMessages, { sender: 'user', message }]);
+    
+    try {
+      const response = await axios.post('/questions', { question: message });
+      const responseData = response.data;
+      if (responseData && responseData.answer) {
+        setChatMessages([...chatMessages, { sender: 'bot', message: responseData.answer }]);
+      } else {
+        setChatMessages([...chatMessages, { sender: 'bot', message: 'Sorry, I could not understand that.' }]);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setChatMessages([...chatMessages, { sender: 'bot', message: 'Sorry, something went wrong.' }]);
+    }
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
@@ -127,7 +217,7 @@ function App() {
               <label className="input-label">Preferences:</label>
               <select name="preferences" value={userData.preferences} onChange={handleInputChange} className="input-field">
                 <option value="">Select</option>
-                <option value="">Kombi</option>
+                <option value="Kombi">Kombi</option>
                 <option value="Low">Limusine</option>
                 <option value="Medium">SUV</option>
                 <option value="High">Cabrio</option>
@@ -138,9 +228,22 @@ function App() {
               <label className="input-label">Fuel-Type:</label>
               <select name="fuelType" value={userData.fuelType} onChange={handleInputChange} className="input-field">
                 <option value="">Select</option>
-                <option value="">Electro</option>
-                <option value="Low">Gas</option>
-                <option value="Medium">Patrol</option>
+                <option value="Electro">Electric</option>
+                <option value="Gas">Gasoline</option>
+                <option value="Patrol">Diesel</option>
+                <option value="Patrol">Hybrid</option>
+                <option value="Patrol">Mulitple</option>
+              </select>
+            </div>
+            <div className="input-row">
+              <label className="input-label">Price:</label>
+              <select name="price" value={userData.fuelType} onChange={handleInputChange} className="input-field">
+                <option value="">Select</option>
+                <option value="Electro">Electric</option>
+                <option value="Gas">Gasoline</option>
+                <option value="Patrol">Diesel</option>
+                <option value="Patrol">Hybrid</option>
+                <option value="Patrol">Mulitple</option>
               </select>
             </div>
             <div className="input-row">
@@ -165,6 +268,7 @@ function App() {
         return (
           <div className="app-content">
             <h2>Recommended Cars:</h2>
+            <ChatWindow onSendMessage={handleSendMessage} chatMessages={chatMessages} />
             <table className="car-table">
               <thead>
                 <tr>
@@ -229,26 +333,6 @@ function App() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
-  };
-
-  const handleSort = (sortBy) => {
-    switch (sortBy) {
-      case 'name':
-        setRecommendedCars([...recommendedCars].sort((a, b) => a.name.localeCompare(b.name)));
-        break;
-      case 'price':
-        setRecommendedCars([...recommendedCars].sort((a, b) => parseFloat(a.price.replace('$', '').replace(',', '')) - parseFloat(b.price.replace('$', '').replace(',', ''))));
-        break;
-      case 'fuelType':
-        setRecommendedCars([...recommendedCars].sort((a, b) => a.fuelType.localeCompare(b.fuelType)));
-        break;
-      case 'transmission':
-        setRecommendedCars([...recommendedCars].sort((a, b) => a.transmission.localeCompare(b.transmission)));
-        break;
-      default:
-        console.log(`Sorting by ${sortBy}`);
-        break;
-    }
   };
 
   return (
