@@ -1,20 +1,22 @@
 import express from "express";
 import User from "../objects/User.js";
 import Car from "../objects/Car.js";
+import AIModel from "../objects/AIModel.js";
 
 const router = express.Router();
 
 let receivedAnswers = [];
 let recommendedCars = [
-  new Car("Toyota", "Camry", 2022),
-  new Car("Honda", "Civic", 2021),
-  new Car("Ford", "Fusion", 2020),
+  //new Car("Toyota", "Camry", 2022),
+  //new Car("Honda", "Civic", 2021),
+  //new Car("Ford", "Fusion", 2020),
 ];
-var user;
+var user = null;
+
+const model = new AIModel();
 
 router
   .post("/user", (req, res) => {
-    console.log("received request");
     if (req.query === null)
       return res
         .status(400)
@@ -47,16 +49,40 @@ router
 
     res.status(201).json({ message: "Answers received" });
   })
-  .get("/recommendations", (req, res) => {
+  .get("/recommendations", async (req, res) => {
+    if (user == null)
+      return res.status(400).json({ error: "Provide user information first" });
+    let message = await model.predict(user);
+    if (message == null) return res.status(400).json({ error: "API error" });
+
+    extractCars(message);
+
     if (!recommendedCars.length)
       return res.status(400).json({ error: "No recommendations found" });
-
-    res.json({ recommendedCars });
+    return res.status(200).json({ recommendedCars });
   })
   .get("/userinfo", (req, res) => {
     if (user === null)
       return res.status(400).json({ error: "Provide user information first" });
     return res.status(200).json(user);
+  })
+  .get("/test", async (req, res) => {
+    if (user == null)
+      return res.status(400).json({ error: "Provide user information first" });
+    let message = await model.predict(user);
+    if (message == null) return res.status(400).json({ error: "API error" });
+    return res.status(200).send(message);
   });
 
 export default router;
+
+function extractCars(inputString) {
+  const regex = /\*\*(.*?)\*\*/gs;
+  let match;
+
+  while ((match = regex.exec(inputString)) !== null) {
+    let car = match[1].trim();
+    console.log("Recommended car: " + car);
+    recommendedCars.push(car);
+  }
+}

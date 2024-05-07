@@ -11,11 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@llama-node/llama-cpp": "^0.1.6",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "llamaindex": "^0.3.0"
+    "llama-node": "^0.1.6",
+    "llamaindex": "^0.3.0",
+    "replicate": "^0.29.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

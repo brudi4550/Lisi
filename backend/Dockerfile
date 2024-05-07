@@ -6,33 +6,48 @@
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-ARG NODE_VERSION=20.12.2
+# ARG NODE_VERSION=20.12.2
 
-FROM node:${NODE_VERSION}-alpine
+# FROM node:${NODE_VERSION}-alpine
 
 # Use production node environment by default.
-ENV NODE_ENV production
+# ENV NODE_ENV production
 
 
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 # Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
 # into this layer.
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+# RUN --mount=type=bind,source=package.json,target=package.json \
+#     --mount=type=bind,source=package-lock.json,target=package-lock.json \
+#     --mount=type=cache,target=/root/.npm \
+#     npm ci --omit=dev
 
 # Run the application as a non-root user.
-USER node
+# USER node
 
 # Copy the rest of the source files into the image.
-COPY . .
+# COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 3000
+# EXPOSE 3000
 
 # Run the application.
-CMD npm start
+# CMD npm start
+
+
+FROM node:20.12.2-alpine
+WORKDIR /usr/src/app
+COPY package.json /usr/src/app/
+
+RUN npm install
+
+COPY . /usr/src/app/
+
+# RUN npm run build
+
+EXPOSE 3000
+
+CMD [ "npm", "start" ]
