@@ -25,14 +25,14 @@ router
     user = new User(
       req.query.age,
       req.query.income,
-      req.query.maritalStatus,
-      req.query.dailyCommute,
       req.query.preferences,
       req.query.environment,
-      req.query.fuelType
+      req.query.fuelType,
+      req.query.priceRange
     );
     console.log(user);
-
+    receivedAnswers = [];
+    recommendedCars = [];
     return res
       .status(201)
       .json({ message: "User information has been stored" });
@@ -66,10 +66,30 @@ router
       return res.status(400).json({ error: "Provide user information first" });
     return res.status(200).json(user);
   })
+  .post("/refine", async (req, res) => {
+    if (recommendedCars.length == 0)
+      return res.status(400).json({ error: "No recommendations found" });
+    let message = await model.refine(
+      recommendedCars,
+      req.query.userInput,
+      user
+    );
+    if (message == null) return res.status(400).json({ error: "API error" });
+
+    extractCars(message);
+
+    if (!recommendedCars.length)
+      return res.status(400).json({ error: "No recommendations found" });
+    return res.status(200).json({ recommendedCars });
+  })
+  .get("/cars", (req, res) => {
+    return res.status(200).json({ recommendedCars });
+  })
+  // TODO: DELETE
   .get("/test", async (req, res) => {
     if (user == null)
       return res.status(400).json({ error: "Provide user information first" });
-    let message = await model.predict(user);
+    let message = await model.refine(recommendedCars, req.query.refined, user);
     if (message == null) return res.status(400).json({ error: "API error" });
     return res.status(200).send(message);
   });
@@ -79,10 +99,13 @@ export default router;
 function extractCars(inputString) {
   const regex = /\*\*(.*?)\*\*/gs;
   let match;
-
+  if (recommendedCars.length != 0) recommendedCars = [];
   while ((match = regex.exec(inputString)) !== null) {
     let car = match[1].trim();
     console.log("Recommended car: " + car);
+
+    //TODO: check if car is already recommended
+
     recommendedCars.push(car);
   }
 }
