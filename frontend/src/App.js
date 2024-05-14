@@ -82,7 +82,7 @@ function App() {
 
     try {
       const fetchedCars = await fetchRecommendedCars(userData);
-      setRecommendedCars(fetchedCars);
+      //setRecommendedCars(fetchedCars);
       sendUserDataToBackend(userData);
       setCurrentPage('recommendation');
     } catch (error) {
@@ -245,11 +245,11 @@ function App() {
               <label className="input-label">Price Preference:</label>
               <select name="price" value={userData.pricePreference} onChange={handleInputChange} className="input-field">
                 <option value="">Select</option>
-                <option value="Electro">Less then 10.000</option>
-                <option value="Gas">10.000 - 20.000</option>
-                <option value="Patrol">20.000 - 30.000</option>
-                <option value="Patrol">30.000 - 40.000</option>
-                <option value="Patrol">More then 40.000</option>
+                <option value="LessThen10000">Less then 10.000</option>
+                <option value="Between10000AND20000">10.000 - 20.000</option>
+                <option value="Between20000AND30000">20.000 - 30.000</option>
+                <option value="Between30000AND40000">30.000 - 40.000</option>
+                <option value="MoreThen40000">More then 40.000</option>
               </select>
             </div>
             <div className="input-row">
