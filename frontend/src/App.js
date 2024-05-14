@@ -81,9 +81,9 @@ function App() {
     setError('');
 
     try {
-      const fetchedCars = await fetchRecommendedCars(userData);
+      //const fetchedCars = await fetchRecommendedCars(userData);
       //setRecommendedCars(fetchedCars);
-      sendUserDataToBackend(userData);
+      sendUserDataToBackend(userData.age, userData.income, userData.preferences, userData.fuelType, userData.environmentalAwareness, userData.pricePreference);
       setCurrentPage('recommendation');
     } catch (error) {
       console.error('Error fetching recommendation:', error);
@@ -119,15 +119,22 @@ function App() {
     });
   };
 
-  const sendUserDataToBackend = async (userData) => {
+  const sendUserDataToBackend = async (age, income, preferences, fuelType, environmentalAwareness, pricePreference) => {
     try {
-      console.log('sending user data')
-      await axios.post('http://localhost:3000/user', userData);
+      console.log('sending user data');
+      await axios.post('http://localhost:3000/user', {
+        age: age,
+        income: income,
+        preferences: preferences,
+        fuelType: fuelType,
+        environmentalAwareness: environmentalAwareness,
+        pricePreference: pricePreference
+      });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   };
-
+ 
   const handleSelectCar = async (car) => {
     try {
       await sendCarToBackend(car);
