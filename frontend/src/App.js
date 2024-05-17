@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import ChatWindow from "./ChatWindow";
 import UserForm from "./UserForm";
 import CarTable from "./CarTable";
@@ -7,7 +6,8 @@ import CarDetails from "./CarDetails";
 import {
   fetchRecommendedCars,
   sendUserDataToBackend,
-  sendCarToBackend,
+  //sendCarToBackend,
+  chatbotMessage,
 } from "./api";
 import "./App.css";
 
@@ -53,34 +53,15 @@ function App() {
     }
     setLoading(false);
   };
-
-  const handleSelectCar = async (car) => {
+  const handleSendMessage = async (chatMessages) => {
     try {
-      await sendCarToBackend(car);
-      setSelectedCars([...selectedCars, car]);
-      setCurrentPage("carDetails");
+      const chatCars = await chatbotMessage(chatMessages);
+      console.log("******Before Update" + recommendedCars);
+      setRecommendedCars(chatCars);
+      //console.log("++++++After Update" + recommendedCars);
     } catch (error) {
-      console.error("Error sending car to backend:", error);
-    }
-  };
-
-  const handleSendMessage = async (message) => {
-    setChatMessages([...chatMessages, { sender: "user", message }]);
-    try {
-      const response = await axios.post("/questions", { question: message });
-      const responseData = response.data;
-      const botMessage =
-        responseData?.answer || "Sorry, I could not understand that.";
-      setChatMessages([
-        ...chatMessages,
-        { sender: "bot", message: botMessage },
-      ]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setChatMessages([
-        ...chatMessages,
-        { sender: "bot", message: "Sorry, something went wrong." },
-      ]);
+      console.error("Error fetching recommended cars:", error);
+      setError("Error fetching recommended cars. Please try again later.");
     }
   };
 

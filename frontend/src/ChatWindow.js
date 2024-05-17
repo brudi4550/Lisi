@@ -16,18 +16,6 @@ function ChatWindow({ onSendMessage, chatMessages }) {
 
   return (
     <div className="chat-window">
-      <div className="chat-messages">
-        {chatMessages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${
-              msg.sender === "user" ? "user-message" : "bot-message"
-            }`}
-          >
-            <p>{msg.message}</p>
-          </div>
-        ))}
-      </div>
       <textarea
         className="chat-input"
         value={message}
