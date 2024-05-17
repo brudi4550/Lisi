@@ -12,7 +12,7 @@ export default class AIModel {
   async predict(user) {
     if (user === null) return; //TODO: implement error handling
     const input = {
-      top_k: 50,
+      top_k: 70,
       top_p: 0.9,
       max_tokens: 512,
       min_tokens: 0,
@@ -32,7 +32,8 @@ export default class AIModel {
         user.fuelType +
         ". The car should be in the range of " +
         user.priceRange +
-        "euros. You now have to recommend some cars for the customer, according to the provided specifications. Keep in mind to recommend the newest models with production dates near 2024",
+        "euros. You now have to recommend some cars for the customer, according to the provided specifications. ",
+      //"euros. You now have to recommend some cars for the customer, according to the provided specifications. Keep in mind to recommend the newest models with production dates near 2024. The output has to be a list with the following format: **CAR 1**\nfurther information \n\n **CAR 2** and so on. Always recommend at least 10 cars according to the specification.",
       prompt_template:
         "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a banking consulting for a leasing bank and you have to recommend cars for the customer, according to the specifications.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
     };
@@ -70,7 +71,7 @@ export default class AIModel {
         user +
         " has the following refinements about the recommendations: " +
         userinput +
-        "Refine your car recommendations and provide the modified ones to the customer. Again keep in mind to recommend the newest models with production dates near 2024.",
+        "Refine your car recommendations and provide the modified ones to the customer. Again keep in mind to recommend the newest models with production dates near 2024. The output has to be a list with the following format: **CAR 1**\nfurther information \n\n **CAR 2** and so on. Always recommend at least 10 cars according to the specification.",
       prompt_template:
         "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a banking consulting for a leasing bank and you have to recommend cars for the customer, according to the specifications.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
     };

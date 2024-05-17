@@ -4,7 +4,11 @@ import ChatWindow from "./ChatWindow";
 import UserForm from "./UserForm";
 import CarTable from "./CarTable";
 import CarDetails from "./CarDetails";
-import { fetchRecommendedCars, sendUserDataToBackend, sendCarToBackend } from "./api";
+import {
+  fetchRecommendedCars,
+  sendUserDataToBackend,
+  sendCarToBackend,
+} from "./api";
 import "./App.css";
 
 function App() {
@@ -34,7 +38,7 @@ function App() {
   };
 
   const handleRecommendation = async () => {
-    if (Object.values(userData).some(field => !field)) {
+    if (Object.values(userData).some((field) => !field)) {
       setError("Please fill out all fields.");
       return;
     }
@@ -65,11 +69,18 @@ function App() {
     try {
       const response = await axios.post("/questions", { question: message });
       const responseData = response.data;
-      const botMessage = responseData?.answer || "Sorry, I could not understand that.";
-      setChatMessages([...chatMessages, { sender: "bot", message: botMessage }]);
+      const botMessage =
+        responseData?.answer || "Sorry, I could not understand that.";
+      setChatMessages([
+        ...chatMessages,
+        { sender: "bot", message: botMessage },
+      ]);
     } catch (error) {
       console.error("Error sending message:", error);
-      setChatMessages([...chatMessages, { sender: "bot", message: "Sorry, something went wrong." }]);
+      setChatMessages([
+        ...chatMessages,
+        { sender: "bot", message: "Sorry, something went wrong." },
+      ]);
     }
   };
 
@@ -89,18 +100,19 @@ function App() {
         return (
           <div className="app-content">
             <h2>Recommended Cars:</h2>
-            <ChatWindow onSendMessage={handleSendMessage} chatMessages={chatMessages} />
-            <CarTable
-              cars={recommendedCars}
-              filter={filter}
-              setFilter={setFilter}
-              handleSelectCar={handleSelectCar}
+            <ChatWindow
+              onSendMessage={handleSendMessage}
+              chatMessages={chatMessages}
             />
+            <CarTable cars={recommendedCars} />
           </div>
         );
       case "carDetails":
         return (
-          <CarDetails cars={selectedCars} handleBackButton={() => setCurrentPage("home")} />
+          <CarDetails
+            cars={selectedCars}
+            handleBackButton={() => setCurrentPage("home")}
+          />
         );
       default:
         return null;

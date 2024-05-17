@@ -1,10 +1,17 @@
 export default class User {
-  constructor(age, income, preferences, environment, fuelType, priceRange) {
+  constructor(
+    age,
+    income,
+    preferences,
+    environmentalAwareness,
+    fuelType,
+    pricePreference
+  ) {
     this.age = age;
     this.income = income;
     this.preferences = preferences;
-    this.environment = environment;
+    this.environmentalAwareness = environmentalAwareness;
     this.fuelType = fuelType;
-    this.priceRange = priceRange;
+    this.pricePreference = pricePreference;
   }
 }

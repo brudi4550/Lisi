@@ -5,7 +5,8 @@ export const fetchRecommendedCars = async (userData) => {
     const response = await axios.get("http://localhost:3000/recommendations", {
       params: userData,
     });
-    return response.data;
+    console.log(response.data.recommendedCars);
+    return response.data.recommendedCars;
   } catch (error) {
     console.error("Error fetching recommended cars:", error);
     throw error;

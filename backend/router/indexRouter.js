@@ -26,9 +26,9 @@ router
       req.query.age,
       req.query.income,
       req.query.preferences,
-      req.query.environment,
+      req.query.environmentalAwareness,
       req.query.fuelType,
-      req.query.priceRange
+      req.query.pricePreference
     );
     console.log(user);
     receivedAnswers = [];
