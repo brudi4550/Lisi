@@ -18,6 +18,7 @@
     "express": "^4.19.2",
     "llama-node": "^0.1.6",
     "llamaindex": "^0.3.0",
+    "ollama-node": "^0.1.28",
     "replicate": "^0.29.4"
   },
   "devDependencies": {

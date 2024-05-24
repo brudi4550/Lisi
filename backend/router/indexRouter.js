@@ -56,7 +56,7 @@ router
     if (message == null) return res.status(400).json({ error: "API error" });
 
     extractCars(message);
-
+    console.log("Number of Cars after extraction: " + recommendedCars.length);
     if (!recommendedCars.length)
       return res.status(400).json({ error: "No recommendations found" });
     return res.status(200).json({ recommendedCars });
