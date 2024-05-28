@@ -2,24 +2,20 @@ import React, { useState, useEffect } from "react";
 import ChatWindow from "./ChatWindow";
 import UserForm from "./UserForm";
 import CarTable from "./CarTable";
-import CarDetails from "./CarDetails";
-import {
-  fetchRecommendedCars,
-  sendUserDataToBackend,
-  //sendCarToBackend,
-  chatbotMessage,
-} from "./api";
+import { fetchRecommendedCars, sendUserDataToBackend, chatbotMessage } from "./api";
 import "./App.css";
+import GamePage from "./GamePage";
+import LoadingSpinner from "./LoadingSpinner";
+import LoadingBar from "./LoadingBar";
 
 function App() {
   const [userData, setUserData] = useState({});
   const [recommendedCars, setRecommendedCars] = useState([]);
-  const [selectedCars, setSelectedCars] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState("");
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatbotMessage, setChatMessages] = useState([]);
+  const [game, setgame] = useState([]);
 
   useEffect(() => {
     if (currentPage === "recommendation") {
@@ -28,12 +24,15 @@ function App() {
   }, [currentPage, userData]);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const fetchedCars = await fetchRecommendedCars(userData);
       setRecommendedCars(fetchedCars);
     } catch (error) {
       console.error("Error fetching recommended cars:", error);
       setError("Error fetching recommended cars. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,8 +41,10 @@ function App() {
       setError("Please fill out all fields.");
       return;
     }
+
     setLoading(true);
     setError("");
+
     try {
       await sendUserDataToBackend(userData);
       setCurrentPage("recommendation");
@@ -51,31 +52,40 @@ function App() {
       console.error("Error fetching recommendation:", error);
       setError("Error fetching recommendation. Please try again later.");
     }
+
     setLoading(false);
   };
-  const handleSendMessage = async (chatMessages) => {
+
+  const handleSendMessage = async (message) => {
     try {
-      const chatCars = await chatbotMessage(chatMessages);
-      console.log("******Before Update" + recommendedCars);
+      const chatCars = await chatbotMessage(message);
       setRecommendedCars(chatCars);
-      //console.log("++++++After Update" + recommendedCars);
     } catch (error) {
       console.error("Error fetching recommended cars:", error);
       setError("Error fetching recommended cars. Please try again later.");
     }
   };
 
+  const handleGameButtonClick = () => {
+    setCurrentPage("gamepage");
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case "home":
         return (
-          <UserForm
-            userData={userData}
-            setUserData={setUserData}
-            handleRecommendation={handleRecommendation}
-            loading={loading}
-            error={error}
-          />
+          <div className="main-content">
+            <div className="center-section">
+              <UserForm
+                userData={userData}
+                setUserData={setUserData}
+                handleRecommendation={handleRecommendation}
+                loading={loading}
+                error={error}
+                handleGameButtonClick={handleGameButtonClick}
+              />
+            </div>
+          </div>
         );
       case "recommendation":
         return (
@@ -83,17 +93,18 @@ function App() {
             <h2>Recommended Cars:</h2>
             <ChatWindow
               onSendMessage={handleSendMessage}
-              chatMessages={chatMessages}
+              chatMessages={chatbotMessage}
             />
             <CarTable cars={recommendedCars} />
+            {loading && <LoadingBar />}
           </div>
         );
-      case "carDetails":
+      case "gamepage":
         return (
-          <CarDetails
-            cars={selectedCars}
-            handleBackButton={() => setCurrentPage("home")}
-          />
+          <div className="app-content">
+            <h2>Game:</h2>
+            <GamePage game={game} />
+          </div>
         );
       default:
         return null;
@@ -103,9 +114,11 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1 className="app-title">LISI</h1>
+        <h1 className="app-title">LI-SI</h1>
       </header>
-      {renderPage()}
+      <div className="content-wrapper">
+        {renderPage()}
+      </div>
       <footer className="app-footer">
         <p>Powered by AI Leasing</p>
       </footer>

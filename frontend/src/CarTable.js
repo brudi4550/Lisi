@@ -17,7 +17,7 @@ function CarTable({ cars, handleSelectCar }) {
   } else {
     rows.push(
       <tr key="error">
-        <td>Error: cars is not an array.</td>
+        <td>Error: Cars is not an array.</td>
       </tr>
     );
   }
