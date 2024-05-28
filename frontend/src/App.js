@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import ChatWindow from "./ChatWindow";
 import UserForm from "./UserForm";
 import CarTable from "./CarTable";
-import { fetchRecommendedCars, sendUserDataToBackend, chatbotMessage } from "./api";
+import {
+  fetchRecommendedCars,
+  sendUserDataToBackend,
+  chatbotMessage,
+} from "./api";
 import "./App.css";
 import GamePage from "./GamePage";
 import LoadingSpinner from "./LoadingSpinner";
@@ -57,12 +61,15 @@ function App() {
   };
 
   const handleSendMessage = async (message) => {
+    setLoading(true);
     try {
       const chatCars = await chatbotMessage(message);
       setRecommendedCars(chatCars);
     } catch (error) {
       console.error("Error fetching recommended cars:", error);
       setError("Error fetching recommended cars. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,8 +102,8 @@ function App() {
               onSendMessage={handleSendMessage}
               chatMessages={chatMessages}
             />
-            <CarTable cars={recommendedCars} />
             {loading && <LoadingBar />}
+            <CarTable cars={recommendedCars} />
           </div>
         );
       case "gamepage":
@@ -116,9 +123,7 @@ function App() {
       <header className="app-header">
         <h1 className="app-title">LI-SI</h1>
       </header>
-      <div className="content-wrapper">
-        {renderPage()}
-      </div>
+      <div className="content-wrapper">{renderPage()}</div>
       <footer className="app-footer">
         <p>Powered by AI Leasing</p>
       </footer>
