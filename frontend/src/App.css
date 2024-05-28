@@ -224,7 +224,6 @@ body {
   transform: scale(1.05);
 }
 
-/* Chat window styles */
 .chat-window {
   background-color: #fff;
   border-radius: 10px;
@@ -251,7 +250,8 @@ body {
 }
 
 .chat-input {
-  width: 100%;
+  max-width: 97%;
+  min-width: 97%;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -274,7 +274,6 @@ body {
 
 .chat-button:hover {
   background-color: #0056b3;
-  transform: scale(1.05);
 }
 
 .flex {
@@ -330,7 +329,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* Gamification styles */
 .gamification {
   background-color: #f9f9f9;
   padding: 20px;
