@@ -7,6 +7,7 @@ const GamePage = () => {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
   const gameAreaRef = useRef(null);
 
   const handleKeyDown = (e) => {
@@ -29,6 +30,15 @@ const GamePage = () => {
 
     const gameInterval = setInterval(() => {
       if (gameOver) return;
+
+      setTimeLeft((prev) => {
+        if (prev === 0) {
+          setGameOver(true);
+          setGameStarted(false);
+          return prev;
+        }
+        return prev - 1;
+      });
 
       setObstacles((prev) => {
         const newObstacles = prev.map((obstacle) => ({
@@ -69,6 +79,7 @@ const GamePage = () => {
     setScore(0);
     setGameOver(false);
     setGameStarted(true);
+    setTimeLeft(60);
   };
 
   return (
@@ -88,6 +99,7 @@ const GamePage = () => {
         />
       ))}
       <div className="score">Score: {score}</div>
+      <div className="time-left">Time Left: {timeLeft} seconds</div>
     </div>
   );
 };

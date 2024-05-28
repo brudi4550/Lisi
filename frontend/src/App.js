@@ -14,7 +14,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
   const [error, setError] = useState("");
-  const [chatbotMessage, setChatMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
   const [game, setgame] = useState([]);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ function App() {
             <h2>Recommended Cars:</h2>
             <ChatWindow
               onSendMessage={handleSendMessage}
-              chatMessages={chatbotMessage}
+              chatMessages={chatMessages}
             />
             <CarTable cars={recommendedCars} />
             {loading && <LoadingBar />}

@@ -1,10 +1,12 @@
 import React from "react";
 import "./LoadingBar.css";
+import carImage from "./car.jpg";
 
 const LoadingBar = () => {
   return (
     <div className="loading-container">
-      {<img src="./car.png" alt="Loading" className="loading-image" />}
+      {/* Use the imported image */}
+      <img src={carImage} alt="Loading" className="loading-image" />
     </div>
   );
 };
