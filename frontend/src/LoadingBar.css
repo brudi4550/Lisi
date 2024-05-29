@@ -1,0 +1,25 @@
+.loading-container {
+  position: relative;
+  width: 100%;
+  height: 100px; /* Adjust as necessary */
+  background-color: #f3f3f3; /* Background color of the loading bar */
+  overflow: hidden;
+}
+
+.loading-image {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 50px; /* Adjust size of the image */
+  animation: move 5s linear infinite; /* Adjust the duration to match the loading time */
+}
+
+@keyframes move {
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 50px); /* Adjust based on the width of the image */
+  }
+}

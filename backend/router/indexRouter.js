@@ -67,6 +67,7 @@ router
     return res.status(200).json(user);
   })
   .post("/refine", async (req, res) => {
+    console.log("------------DEBUG CHAT ----------------");
     if (recommendedCars.length == 0)
       return res.status(400).json({ error: "No recommendations found" });
     let message = await model.refine(

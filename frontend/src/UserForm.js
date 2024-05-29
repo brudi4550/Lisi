@@ -1,6 +1,6 @@
 import React from "react";
 
-function UserForm({ userData, setUserData, handleRecommendation, loading, error }) {
+function UserForm({ userData, setUserData, handleRecommendation, loading, error, handleGameButtonClick }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -98,6 +98,13 @@ function UserForm({ userData, setUserData, handleRecommendation, loading, error 
           disabled={loading}
         >
           {loading ? "Loading..." : "Recommend Car"}
+        </button>
+        <button
+          className="game-button" 
+          onClick={handleGameButtonClick}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Play Game"}
         </button>
       </div>
     </div>
