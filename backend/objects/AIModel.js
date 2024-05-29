@@ -60,15 +60,7 @@ export default class AIModel {
       user.pricePreference +
       "euros. You now have to recommend some cars for the customer, according to the provided specifications. ";
 
-    var api_result = this.call_api(input);
-    var selfHost_result = this.call_selfHost(prompt);
-    var answer;
-
-    await Promise.race([api_result, selfHost_result]).then(
-      (results) => (answer = results)
-    );
-
-    return answer;
+    return this.evaluate_answer(input, prompt);
   }
 
   async refine(recommendations, userinput, user) {
@@ -106,19 +98,11 @@ export default class AIModel {
       userinput +
       "Refine your car recommendations and provide the modified ones to the customer. Again keep in mind to recommend the newest models with production dates near 2024. ";
 
-    var api_result = this.call_api(input);
-    var selfHost_result = this.call_selfHost(prompt);
-    var answer;
-
-    await Promise.race([api_result, selfHost_result]).then(
-      (results) => (answer = results)
-    );
-
-    return answer;
+    return this.evaluate_answer(input, prompt);
   }
 
   async call_api(input) {
-    var answer = "";
+    let answer = "";
     for await (const event of this.replicate.stream(
       "meta/meta-llama-3-70b-instruct",
       {
@@ -127,20 +111,23 @@ export default class AIModel {
     )) {
       answer += event.toString();
     }
-
-    answer = "API \n" + answer;
-    console.log(
-      "***************************************" +
-        "\n LLM-export: \n" +
-        answer +
-        "\n***************************************"
-    );
-    return answer;
+    return "API \n" + answer;
   }
 
   async call_selfHost(prompt) {
     await this.ollama.setModel("llama3");
-    var answer = "SELFHOST \n" + (await this.ollama.generate(prompt)).output;
+    return "SELFHOST \n" + (await this.ollama.generate(prompt)).output;
+  }
+
+  async evaluate_answer(input, prompt) {
+    let api_result = this.call_api(input);
+    let selfHost_result = this.call_selfHost(prompt);
+    let answer;
+
+    await Promise.race([api_result, selfHost_result]).then(
+      (results) => (answer = results)
+    );
+
     console.log(
       "***************************************" +
         "\n LLM-export: \n" +
