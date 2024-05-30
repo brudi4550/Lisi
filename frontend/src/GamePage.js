@@ -7,7 +7,8 @@ const GamePage = () => {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [level, setLevel] = useState(1);
+  const [gameWon, setGameWon] = useState(false);
   const gameAreaRef = useRef(null);
 
   const handleKeyDown = (e) => {
@@ -26,24 +27,15 @@ const GamePage = () => {
   }, [carPosition, gameOver, gameStarted]);
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || gameWon) return;
 
     const gameInterval = setInterval(() => {
-      if (gameOver) return;
-
-      setTimeLeft((prev) => {
-        if (prev === 0) {
-          setGameOver(true);
-          setGameStarted(false);
-          return prev;
-        }
-        return prev - 1;
-      });
+      if (gameOver || gameWon) return;
 
       setObstacles((prev) => {
         const newObstacles = prev.map((obstacle) => ({
           ...obstacle,
-          y: obstacle.y + 5,
+          y: obstacle.y + (5 + level),
         }));
 
         newObstacles.forEach((obstacle) => {
@@ -52,26 +44,40 @@ const GamePage = () => {
             obstacle.y <= 100 &&
             Math.abs(obstacle.x - carPosition) < 10
           ) {
+            console.log("Collision detected");
             setGameOver(true);
             setGameStarted(false);
           }
         });
 
         const filteredObstacles = newObstacles.filter((obstacle) => obstacle.y < 100);
-        if (Math.random() < 0.1) {
+        if (Math.random() < 0.1 + level * 0.05) {
           filteredObstacles.push({
             x: Math.random() * 100,
             y: 0,
           });
         }
 
-        setScore((prev) => prev + 1);
+        setScore((prev) => {
+          const newScore = prev + 1;
+          console.log(`Score: ${newScore}`);
+          if (newScore >= 800) {
+            setGameWon(true);
+            setGameStarted(false);
+          } else if (newScore >= 500) {
+            setLevel(3);
+          } else if (newScore >= 200) {
+            setLevel(2);
+          }
+          return newScore;
+        });
+
         return filteredObstacles;
       });
-    }, 100);
+    }, 200); // Ein längeres Intervall für bessere Debugging
 
     return () => clearInterval(gameInterval);
-  }, [carPosition, gameOver, gameStarted]);
+  }, [carPosition, gameOver, gameStarted, level, gameWon]);
 
   const startGame = () => {
     setCarPosition(50);
@@ -79,17 +85,19 @@ const GamePage = () => {
     setScore(0);
     setGameOver(false);
     setGameStarted(true);
-    setTimeLeft(60);
+    setLevel(1);
+    setGameWon(false);
   };
 
   return (
     <div className="game-container" ref={gameAreaRef}>
-      {!gameStarted && (
+      {!gameStarted && !gameWon && (
         <button className="start-button" onClick={startGame}>
           Start Game
         </button>
       )}
       {gameOver && <div className="game-over">Game Over! Score: {score}</div>}
+      {gameWon && <div className="game-won">Congratulations! You've won a test drive with a leasing car!</div>}
       <div className="car" style={{ left: `${carPosition}%` }} />
       {obstacles.map((obstacle, index) => (
         <div
@@ -99,7 +107,7 @@ const GamePage = () => {
         />
       ))}
       <div className="score">Score: {score}</div>
-      <div className="time-left">Time Left: {timeLeft} seconds</div>
+      <div className="level">Level: {level}</div>
     </div>
   );
 };
