@@ -1,31 +1,52 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { getCarInformation } from "./api";
 
-function CarDetails({ cars, handleBackButton }) {
+function CarDetails({ car, handleBackButton }) {
+  const handleGetInfo = async () => {
+    try {
+      const carInfo = await getCarInformation(car);
+      console.log("Car information:", carInfo);
+    } catch (error) {
+      console.error("Error getting car information:", error);
+    }
+  };
+
+  if (!car) {
+    return (
+      <div className="app-content car-details">
+        <h2 className="no-car-heading">No Car Selected</h2>
+        <button className="back-button" onClick={handleBackButton}>
+          Back
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="app-content car-details">
-      <h2>Selected Cars:</h2>
-      <div className="car-list">
-        {cars.map((car, index) => (
-          <div key={index} className="car-item">
-            <div className="car-info">
-              <p className="car-name">{car.name}</p>
-              <p className="car-price">Price: {car.price}</p>
-              <p className="car-fuel">Fuel Type: {car.fuelType}</p>
-              <p className="car-transmission">Transmission: {car.transmission}</p>
-            </div>
-            <div className="car-image">
-              <img src={car.imageUrl} alt={car.name} />
-            </div>
-          </div>
-        ))}
+      <h2 className="selected-car-heading">Selected Car:</h2>
+      <div className="car-details-container">
+        <div className="car-name">
+          <p><strong>Name:</strong> {car}</p>
+        </div>
+        {/* Additional information display */}
       </div>
       <div className="button-row">
         <button className="back-button" onClick={handleBackButton}>
           Back
         </button>
+        <button className="get-info-button" onClick={handleGetInfo}>
+          Get Information
+        </button>
       </div>
     </div>
   );
 }
+
+CarDetails.propTypes = {
+  car: PropTypes.string,
+  handleBackButton: PropTypes.func.isRequired,
+};
 
 export default CarDetails;

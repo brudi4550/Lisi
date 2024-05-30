@@ -37,3 +37,20 @@ export const chatbotMessage = async (userInput) => {
     throw error;
   }
 };
+
+export const getCarInformation = async (carName) => {
+  try {
+    const response = await axios.post("http://localhost:3000/getcardetails", null, {
+      params: { carName: carName },
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error("Request failed with status", response.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching car information:", error);
+    throw error;
+  }
+};

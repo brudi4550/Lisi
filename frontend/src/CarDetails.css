@@ -1,0 +1,41 @@
+.car-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .car-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .car-info-string {
+    flex-grow: 1;
+    margin-left: 20px;
+    padding: 15px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background-color: #f0f8ff;
+    color: #007bff;
+    font-size: 16px;
+  }
+  
+  .button-row {
+    margin-top: 20px;
+  }
+  
+  .back-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .back-button:hover {
+    background-color: #0056b3;
+  }  

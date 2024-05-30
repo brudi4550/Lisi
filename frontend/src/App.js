@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ChatWindow from "./ChatWindow";
 import UserForm from "./UserForm";
 import CarTable from "./CarTable";
+import CarDetails from "./CarDetails";
 import {
   fetchRecommendedCars,
   sendUserDataToBackend,
@@ -15,11 +16,12 @@ import LoadingBar from "./LoadingBar";
 function App() {
   const [userData, setUserData] = useState({});
   const [recommendedCars, setRecommendedCars] = useState([]);
+  const [selectedCar, setSelectedCar] = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
   const [error, setError] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
-  const [game, setgame] = useState([]);
+  const [game, setGame] = useState([]);
 
   useEffect(() => {
     if (currentPage === "recommendation") {
@@ -77,6 +79,11 @@ function App() {
     setCurrentPage("gamepage");
   };
 
+  const handleSelectCar = (car) => {
+    setSelectedCar(car);
+    setCurrentPage("cardetails");
+  };  
+
   const renderPage = () => {
     switch (currentPage) {
       case "home":
@@ -103,7 +110,13 @@ function App() {
               chatMessages={chatMessages}
             />
             {loading && <LoadingBar />}
-            <CarTable cars={recommendedCars} />
+            <CarTable cars={recommendedCars} handleSelectCar={handleSelectCar} />
+          </div>
+        );
+      case "cardetails":
+        return (
+          <div className="app-content">
+            <CarDetails car={selectedCar} handleBackButton={() => setCurrentPage("recommendation")} />
           </div>
         );
       case "gamepage":
