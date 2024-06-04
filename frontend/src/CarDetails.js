@@ -1,44 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { getCarInformation } from "./api";
 
 function CarDetails({ car, handleBackButton }) {
+  const [carInfo, setCarInfo] = useState("");
+  const [showInfo, setShowInfo] = useState(false);
+
   const handleGetInfo = async () => {
     try {
-      const carInfo = await getCarInformation(car);
-      console.log("Car information:", carInfo);
+      const info = await getCarInformation(car);
+      setCarInfo(info);
+      setShowInfo(true);
     } catch (error) {
       console.error("Error getting car information:", error);
     }
   };
-
-  if (!car) {
-    return (
-      <div className="app-content car-details">
-        <h2 className="no-car-heading">No Car Selected</h2>
-        <button className="back-button" onClick={handleBackButton}>
-          Back
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="app-content car-details">
       <h2 className="selected-car-heading">Selected Car:</h2>
       <div className="car-details-container">
         <div className="car-name">
-          <p><strong>Name:</strong> {car}</p>
+          <p>
+            <strong>Name:</strong> {car}
+          </p>
         </div>
-        {/* Additional information display */}
-      </div>
-      <div className="button-row">
-        <button className="back-button" onClick={handleBackButton}>
-          Back
-        </button>
-        <button className="get-info-button" onClick={handleGetInfo}>
-          Get Information
-        </button>
+        <div className="button-row">
+          <button className="back-button" onClick={handleBackButton}>
+            Back
+          </button>
+          {!showInfo && (
+            <button className="get-info-button" onClick={handleGetInfo}>
+              Get Information
+            </button>
+          )}
+        </div>
+        {showInfo && (
+          <div className="car-info-textbox">
+            <textarea
+              value={carInfo}
+              onChange={() => {}}
+              rows={6}
+              style={{ width: "100%", boxSizing: "border-box" }}
+              placeholder="Car Information"
+              readOnly
+            />
+          </div>
+        )}
       </div>
     </div>
   );
