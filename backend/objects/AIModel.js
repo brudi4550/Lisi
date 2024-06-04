@@ -23,7 +23,7 @@ export default class AIModel {
     const input = {
       top_k: 70,
       top_p: 0.9,
-      max_tokens: 512,
+      max_tokens: 900,
       min_tokens: 0,
       temperature: 0.6,
       presence_penalty: 1.15,
@@ -49,7 +49,7 @@ export default class AIModel {
     const input = {
       top_k: 50,
       top_p: 0.9,
-      max_tokens: 512,
+      max_tokens: 900,
       min_tokens: 0,
       temperature: 0.6,
       presence_penalty: 1.15,
@@ -72,7 +72,7 @@ export default class AIModel {
     const input = {
       top_k: 50,
       top_p: 0.9,
-      max_tokens: 512,
+      max_tokens: 900,
       min_tokens: 0,
       temperature: 0.6,
       presence_penalty: 1.15,
