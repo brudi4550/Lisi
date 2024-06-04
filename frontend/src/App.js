@@ -28,6 +28,7 @@ function App() {
   const [game, setGame] = useState([]);
 
   const fetchData = async () => {
+    console.log("Fetching data...");
     setLoading(true);
     try {
       const fetchedCars = await fetchRecommendedCars(userData);
@@ -37,6 +38,7 @@ function App() {
       setError("Error fetching recommended cars. Please try again later.");
     } finally {
       setLoading(false);
+      console.log("Fetching data finished.");
     }
   };
 
@@ -51,13 +53,13 @@ function App() {
 
     try {
       await sendUserDataToBackend(userData);
-      fetchData();
+      await fetchData();
     } catch (error) {
       console.error("Error fetching recommendation:", error);
       setError("Error fetching recommendation. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleSendMessage = async (message) => {
@@ -167,6 +169,7 @@ const HomePage = ({
           error={error}
           handleGameButtonClick={handleGameButtonClick}
         />
+        {loading && <LoadingBar />}
       </div>
     </div>
   );
@@ -188,11 +191,11 @@ const RecommendationPage = ({
 
   return (
     <div className="app-content">
+      <h2>Recommended Cars:</h2>
       <ChatWindow
         onSendMessage={handleSendMessage}
         chatMessages={chatMessages}
       />
-      <h2>Recommended Cars:</h2>
       {loading && <LoadingBar />}
       <CarTable cars={recommendedCars} handleSelectCar={handleSelectCar} />
     </div>
