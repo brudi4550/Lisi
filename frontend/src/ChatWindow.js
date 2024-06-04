@@ -20,7 +20,7 @@ function ChatWindow({ onSendMessage, chatMessages }) {
         className="chat-input"
         value={message}
         onChange={handleMessageChange}
-        placeholder="Type your message..."
+        placeholder="Type your message to refine the recommendations below ..."
       />
       <button className="chat-button" onClick={handleSendMessage}>
         Send

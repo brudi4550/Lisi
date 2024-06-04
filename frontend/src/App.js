@@ -201,11 +201,11 @@ const RecommendationPage = ({
 
   return (
     <div className="app-content">
-      <h2>Recommended Cars:</h2>
       <ChatWindow
         onSendMessage={handleSendMessage}
         chatMessages={chatMessages}
       />
+      <h2>Recommended Cars:</h2>
       {loading && <LoadingBar />}
       <CarTable cars={recommendedCars} handleSelectCar={handleSelectCar} />
     </div>
