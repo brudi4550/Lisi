@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import ChatWindow from "./ChatWindow";
 import UserForm from "./UserForm";
 import CarTable from "./CarTable";
 import CarDetails from "./CarDetails";
+import GamePage from "./GamePage";
+import LoadingSpinner from "./LoadingSpinner";
+import LoadingBar from "./LoadingBar";
 import {
   fetchRecommendedCars,
   sendUserDataToBackend,
   chatbotMessage,
 } from "./api";
 import "./App.css";
-import GamePage from "./GamePage";
-import LoadingSpinner from "./LoadingSpinner";
-import LoadingBar from "./LoadingBar";
 
 function App() {
   const [userData, setUserData] = useState({});
   const [recommendedCars, setRecommendedCars] = useState([]);
   const [selectedCar, setSelectedCar] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState("home");
   const [error, setError] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [game, setGame] = useState([]);
-
-  useEffect(() => {
-    if (currentPage === "recommendation") {
-      fetchData();
-    }
-  }, [currentPage, userData]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -53,7 +52,7 @@ function App() {
 
     try {
       await sendUserDataToBackend(userData);
-      setCurrentPage("recommendation");
+      fetchData();
     } catch (error) {
       console.error("Error fetching recommendation:", error);
       setError("Error fetching recommendation. Please try again later.");
@@ -75,73 +74,143 @@ function App() {
     }
   };
 
-  const handleGameButtonClick = () => {
-    setCurrentPage("gamepage");
-  };
-
-  const handleSelectCar = (car) => {
-    setSelectedCar(car);
-    setCurrentPage("cardetails");
-  };  
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case "home":
-        return (
-          <div className="main-content">
-            <div className="center-section">
-              <UserForm
-                userData={userData}
-                setUserData={setUserData}
-                handleRecommendation={handleRecommendation}
-                loading={loading}
-                error={error}
-                handleGameButtonClick={handleGameButtonClick}
-              />
-            </div>
-          </div>
-        );
-      case "recommendation":
-        return (
-          <div className="app-content">
-            <h2>Recommended Cars:</h2>
-            <ChatWindow
-              onSendMessage={handleSendMessage}
-              chatMessages={chatMessages}
+  return (
+    <Router>
+      <div className="app-container">
+        <AppHeader />
+        <div className="content-wrapper">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <HomePage
+                  userData={userData}
+                  setUserData={setUserData}
+                  handleRecommendation={handleRecommendation}
+                  loading={loading}
+                  error={error}
+                />
+              }
             />
-            {loading && <LoadingBar />}
-            <CarTable cars={recommendedCars} handleSelectCar={handleSelectCar} />
-          </div>
-        );
-      case "cardetails":
-        return (
-          <div className="app-content">
-            <CarDetails car={selectedCar} handleBackButton={() => setCurrentPage("recommendation")} />
-          </div>
-        );
-      case "gamepage":
-        return (
-          <div className="app-content">
-            <h2>Game:</h2>
-            <GamePage game={game} />
-          </div>
-        );
-      default:
-        return null;
-    }
+            <Route
+              path="/recommendation"
+              element={
+                <RecommendationPage
+                  recommendedCars={recommendedCars}
+                  loading={loading}
+                  handleSendMessage={handleSendMessage}
+                  chatMessages={chatMessages}
+                  setSelectedCar={setSelectedCar}
+                />
+              }
+            />
+            <Route
+              path="/cardetails"
+              element={<CarDetailsPage selectedCar={selectedCar} />}
+            />
+            <Route path="/gamepage" element={<GamePage game={game} />} />
+          </Routes>
+        </div>
+        <footer className="app-footer">
+          <p>Powered by AI Leasing</p>
+        </footer>
+      </div>
+    </Router>
+  );
+}
+
+const AppHeader = () => {
+  const navigate = useNavigate();
+
+  const handleTitleClick = () => {
+    navigate("/");
   };
 
   return (
-    <div className="app-container">
-      <header className="app-header">
-        <h1 className="app-title">LI-SI</h1>
-      </header>
-      <div className="content-wrapper">{renderPage()}</div>
-      <footer className="app-footer">
-        <p>Powered by AI Leasing</p>
-      </footer>
+    <header className="app-header">
+      <h1
+        className="app-title"
+        onClick={handleTitleClick}
+        style={{ cursor: "pointer" }}
+      >
+        LI-SI
+      </h1>
+    </header>
+  );
+};
+
+const HomePage = ({
+  userData,
+  setUserData,
+  handleRecommendation,
+  loading,
+  error,
+}) => {
+  const navigate = useNavigate();
+
+  const handleGameButtonClick = () => {
+    navigate("/gamepage");
+  };
+
+  const handleSubmit = async () => {
+    await handleRecommendation();
+    navigate("/recommendation");
+  };
+
+  return (
+    <div className="main-content">
+      <div className="center-section">
+        <UserForm
+          userData={userData}
+          setUserData={setUserData}
+          handleRecommendation={handleSubmit}
+          loading={loading}
+          error={error}
+          handleGameButtonClick={handleGameButtonClick}
+        />
+      </div>
     </div>
   );
-}
+};
+
+const RecommendationPage = ({
+  recommendedCars,
+  loading,
+  handleSendMessage,
+  chatMessages,
+  setSelectedCar,
+}) => {
+  const navigate = useNavigate();
+
+  const handleSelectCar = (car) => {
+    setSelectedCar(car);
+    navigate("/cardetails");
+  };
+
+  return (
+    <div className="app-content">
+      <h2>Recommended Cars:</h2>
+      <ChatWindow
+        onSendMessage={handleSendMessage}
+        chatMessages={chatMessages}
+      />
+      {loading && <LoadingBar />}
+      <CarTable cars={recommendedCars} handleSelectCar={handleSelectCar} />
+    </div>
+  );
+};
+
+const CarDetailsPage = ({ selectedCar }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="app-content">
+      <CarDetails
+        car={selectedCar}
+        handleBackButton={() => navigate("/recommendation")}
+      />
+    </div>
+  );
+};
 
 export default App;
