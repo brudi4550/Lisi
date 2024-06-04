@@ -21,27 +21,23 @@ const dummyData = {
     fuelType: "Electric",
     pricePreference: "Medium",
   },
-  recommendedCars: [
-    "Tesla Model 3",
-    "Nissan Leaf",
-    "Chevrolet Bolt EV",
-  ],
+  recommendedCars: ["Tesla Model 3", "Nissan Leaf", "Chevrolet Bolt EV"],
 };
 
 router
   .post("/user", (req, res) => {
-    if (!req.body)
+    if (!req.query)
       return res
         .status(400)
         .json({ error: "User information has to be provided" });
 
     user = new User(
-      req.body.age,
-      req.body.income,
-      req.body.preferences,
-      req.body.environmentalAwareness,
-      req.body.fuelType,
-      req.body.pricePreference
+      req.query.age,
+      req.query.income,
+      req.query.preferences,
+      req.query.environmentalAwareness,
+      req.query.fuelType,
+      req.query.pricePreference
     );
     console.log(user);
     receivedAnswers = [];
@@ -138,19 +134,29 @@ router
     user = null;
     receivedAnswers = [];
     recommendedCars = [];
-    return res.status(200).json({ message: "User information and recommendations have been cleared" });
+    return res
+      .status(200)
+      .json({
+        message: "User information and recommendations have been cleared",
+      });
   })
   .get("/test", async (req, res) => {
     if (user == null)
       return res.status(400).json({ error: "Provide user information first" });
 
     try {
-      let message = await model.refine(recommendedCars, req.query.refined, user);
+      let message = await model.refine(
+        recommendedCars,
+        req.query.refined,
+        user
+      );
       if (message == null) throw new Error("API error");
       return res.status(200).send(message);
     } catch (error) {
       console.log("Using dummy data due to API error");
-      return res.status(200).send("**Tesla Model 3** **Nissan Leaf** **Chevrolet Bolt EV**");
+      return res
+        .status(200)
+        .send("**Tesla Model 3** **Nissan Leaf** **Chevrolet Bolt EV**");
     }
   });
 
