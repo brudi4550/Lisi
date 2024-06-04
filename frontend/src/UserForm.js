@@ -1,6 +1,13 @@
 import React from "react";
 
-function UserForm({ userData, setUserData, handleRecommendation, loading, error, handleGameButtonClick }) {
+function UserForm({
+  userData,
+  setUserData,
+  handleRecommendation,
+  loading,
+  error,
+  handleGameButtonClick,
+}) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -19,7 +26,7 @@ function UserForm({ userData, setUserData, handleRecommendation, loading, error,
         />
       </div>
       <div className="input-row">
-        <label className="input-label">Income:</label>
+        <label className="input-label">Monthly income:</label>
         <input
           type="text"
           name="income"
@@ -100,7 +107,7 @@ function UserForm({ userData, setUserData, handleRecommendation, loading, error,
           {loading ? "Loading..." : "Recommend Car"}
         </button>
         <button
-          className="game-button" 
+          className="game-button"
           onClick={handleGameButtonClick}
           disabled={loading}
         >
