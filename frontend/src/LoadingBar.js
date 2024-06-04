@@ -1,6 +1,6 @@
 import React from "react";
 import "./LoadingBar.css";
-import carImage from "./car.png";
+import carImage from "./images/car.png";
 
 const LoadingBar = () => {
   return (

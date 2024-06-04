@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./GamePage.css";
-import carImage from "./f1.png";
-import obstacleImage from "./blockade.png";
+import carImage from "./images/f1.png";
+import obstacleImage from "./images/blockade.png";
 
 const GamePage = () => {
   const [carPosition, setCarPosition] = useState(50);
