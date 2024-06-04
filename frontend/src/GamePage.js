@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./GamePage.css";
+import carImage from "./f1.png";
+import obstacleImage from "./blockade.png";
 
 const GamePage = () => {
   const [carPosition, setCarPosition] = useState(50);
@@ -50,7 +52,9 @@ const GamePage = () => {
           }
         });
 
-        const filteredObstacles = newObstacles.filter((obstacle) => obstacle.y < 100);
+        const filteredObstacles = newObstacles.filter(
+          (obstacle) => obstacle.y < 100
+        );
         if (Math.random() < 0.1 + level * 0.05) {
           filteredObstacles.push({
             x: Math.random() * 100,
@@ -97,13 +101,24 @@ const GamePage = () => {
         </button>
       )}
       {gameOver && <div className="game-over">Game Over! Score: {score}</div>}
-      {gameWon && <div className="game-won">Congratulations! You've won a test drive with a leasing car!</div>}
-      <div className="car" style={{ left: `${carPosition}%` }} />
+      {gameWon && (
+        <div className="game-won">
+          Congratulations! You've won a test drive with a leasing car!
+        </div>
+      )}
+      <div
+        className="car"
+        src={carImage}
+        style={{ left: `${carPosition}%` }}
+        alt="Car"
+      />
       {obstacles.map((obstacle, index) => (
         <div
+          src={obstacleImage}
           key={index}
           className="obstacle"
           style={{ left: `${obstacle.x}%`, top: `${obstacle.y}%` }}
+          alt="Obstacle"
         />
       ))}
       <div className="score">Score: {score}</div>
