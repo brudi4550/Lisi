@@ -45,10 +45,10 @@ function UserForm({
         >
           <option value="">Select</option>
           <option value="Kombi">Kombi</option>
-          <option value="Low">Limusine</option>
-          <option value="Medium">SUV</option>
-          <option value="High">Cabrio</option>
-          <option value="High">Coupe</option>
+          <option value="Limusine">Limusine</option>
+          <option value="SUV">SUV</option>
+          <option value="Cabrio">Cabrio</option>
+          <option value="Coupe">Coupe</option>
         </select>
       </div>
       <div className="input-row">
@@ -62,9 +62,9 @@ function UserForm({
           <option value="">Select</option>
           <option value="Electro">Electric</option>
           <option value="Gas">Gasoline</option>
-          <option value="Patrol">Diesel</option>
-          <option value="Patrol">Hybrid</option>
-          <option value="Patrol">Mulitple</option>
+          <option value="Diesel">Diesel</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Multiple">Mulitple</option>
         </select>
       </div>
       <div className="input-row">
