@@ -10,7 +10,6 @@ import UserForm from "./UserForm";
 import CarTable from "./CarTable";
 import CarDetails from "./CarDetails";
 import GamePage from "./GamePage";
-import LoadingSpinner from "./LoadingSpinner";
 import LoadingBar from "./LoadingBar";
 import {
   fetchRecommendedCars,
@@ -133,7 +132,7 @@ const AppHeader = () => {
         onClick={handleTitleClick}
         style={{ cursor: "pointer" }}
       >
-        LI-SI
+        LISI
       </h1>
     </header>
   );
@@ -189,11 +188,11 @@ const RecommendationPage = ({
 
   return (
     <div className="app-content">
-      <h2>Recommended Cars:</h2>
       <ChatWindow
         onSendMessage={handleSendMessage}
         chatMessages={chatMessages}
       />
+      <h2>Recommended Cars:</h2>
       {loading && <LoadingBar />}
       <CarTable cars={recommendedCars} handleSelectCar={handleSelectCar} />
     </div>
