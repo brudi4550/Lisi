@@ -92,7 +92,7 @@ router
     return res.status(200).json(user);
   })
   .post("/getcardetails", async (req, res) => {
-    const { carName } = req.body;
+    const carName = req.query.carName;
     try {
       const carDetails = await model.carinfo(carName);
       if (!carDetails) {

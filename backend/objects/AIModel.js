@@ -11,7 +11,7 @@ export default class AIModel {
     this.ollama = new Ollama();
     this.ollama.setSystemPrompt(
       "You are a banking consultant for a leasing bank, and you have to recommend cars for the customer according to the specifications." +
-      "The output has to be a list with the following format: **CAR 1**\nfurther information \n\n **CAR 2** and so on. Always recommend at least 10 cars according to the specification."
+        "The output has to be a list with the following format: **CAR 1**\nfurther information \n\n **CAR 2** and so on. Always recommend at least 10 cars according to the specification."
     );
   }
 
@@ -29,7 +29,8 @@ export default class AIModel {
       presence_penalty: 1.15,
       frequency_penalty: 0.2,
       prompt: `Your customer is ${user.age} years old, with an income of ${user.income} per month. The customer wants to lease a new car of the type ${user.preferences}, with a ${user.environmentalAwareness} environmental awareness and the fuel type should be ${user.fuelType}. The car should be in the range of ${user.pricePreference} euros. You now have to recommend some cars for the customer according to the provided specifications.`,
-      prompt_template: "system\n\nYou are a banking consultant for a leasing bank, and you have to recommend cars for the customer according to the specifications. user\n\n{prompt} assistant\n\n",
+      prompt_template:
+        "system\n\nYou are a banking consultant for a leasing bank, and you have to recommend cars for the customer according to the specifications. user\n\n{prompt} assistant\n\n",
     };
 
     console.log("\t******** CALLING LLM FOR RECOMMENDATIONS ********");
@@ -54,7 +55,8 @@ export default class AIModel {
       presence_penalty: 1.15,
       frequency_penalty: 0.2,
       prompt: `You already delivered the following recommendations: ${recommendations}. Now the customer ${user.age} years old, with an income of ${user.income} per month, has the following refinements about the recommendations: ${userInput}. Refine your car recommendations and provide the modified ones to the customer. Again, keep in mind to recommend the newest models with production dates near 2024. The output has to be a list with the following format: **CAR 1**\nfurther information \n\n **CAR 2** and so on. Always recommend at least 10 cars according to the specification.`,
-      prompt_template: "system\n\nYou are a banking consultant for a leasing bank, and you have to recommend cars for the customer according to the specifications. user\n\n{prompt} assistant\n\n",
+      prompt_template:
+        "system\n\nYou are a banking consultant for a leasing bank, and you have to recommend cars for the customer according to the specifications. user\n\n{prompt} assistant\n\n",
     };
 
     console.log("\t******** CALLING LLM FOR REFINEMENT ********");
@@ -75,12 +77,13 @@ export default class AIModel {
       temperature: 0.6,
       presence_penalty: 1.15,
       frequency_penalty: 0.2,
-      prompt: `You already delivered the following car: ${car}.`,
-      prompt_template: "system\n\nYou are a car consultant, and you have to give all the information for one car according to the given car. user\n\n{prompt} assistant\n\n",
+      prompt: `Provide details for the following car: ${car}.`,
+      prompt_template:
+        "system\n\nYou are a car consultant, and you have to give all the information for one car according to the given car. user\n\n{prompt} assistant\n\n",
     };
 
-    console.log("\t******** CALLING LLM FOR REFINEMENT ********");
-
+    console.log("\t******** CALLING LLM FOR CAR INFORMATION ********");
+    console.log(car);
     return this.evaluate_answer(input, input.prompt);
   }
 
@@ -118,9 +121,9 @@ export default class AIModel {
       const answer = await Promise.race([api_result, selfHost_result]);
       console.log(
         "***************************************" +
-        "\n LLM-export: \n" +
-        answer +
-        "\n***************************************"
+          "\n LLM-export: \n" +
+          answer +
+          "\n***************************************"
       );
       return answer;
     } catch (error) {
