@@ -75,10 +75,19 @@ function App() {
     }
   };
 
+  const handleResetState = () => {
+    setUserData({});
+    setRecommendedCars([]);
+    setSelectedCar(null);
+    setError("");
+    setChatMessages([]);
+    setGame([]);
+  };
+
   return (
     <Router>
       <div className="app-container">
-        <AppHeader />
+        <AppHeader handleResetState={handleResetState} />
         <div className="content-wrapper">
           <Routes>
             <Route
@@ -120,10 +129,11 @@ function App() {
   );
 }
 
-const AppHeader = () => {
+const AppHeader = ({ handleResetState }) => {
   const navigate = useNavigate();
 
   const handleTitleClick = () => {
+    handleResetState();
     navigate("/");
   };
 
