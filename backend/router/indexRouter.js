@@ -108,13 +108,13 @@ router
     console.log("------------DEBUG CHAT ----------------");
     if (recommendedCars.length == 0)
       return res.status(400).json({ error: "No recommendations found" });
-
     try {
       let message = await model.refine(
         recommendedCars,
-        req.body.userInput,
+        req.query.userInput,
         user
       );
+
       if (message == null) throw new Error("API error");
 
       extractCars(message);
@@ -134,11 +134,9 @@ router
     user = null;
     receivedAnswers = [];
     recommendedCars = [];
-    return res
-      .status(200)
-      .json({
-        message: "User information and recommendations have been cleared",
-      });
+    return res.status(200).json({
+      message: "User information and recommendations have been cleared",
+    });
   })
   .get("/test", async (req, res) => {
     if (user == null)
