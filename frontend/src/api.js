@@ -2,7 +2,10 @@ import axios from "axios";
 
 export const fetchRecommendedCars = async (userData) => {
   try {
-    const response = await axios.get("http://localhost:3000/recommendations", {});
+    const response = await axios.get(
+      "http://localhost:3000/recommendations",
+      {}
+    );
     return response.data.recommendedCars;
   } catch (error) {
     console.error("Error fetching recommended cars:", error);
@@ -40,11 +43,17 @@ export const chatbotMessage = async (userInput) => {
 
 export const getCarInformation = async (carName) => {
   try {
-    const response = await axios.post("http://localhost:3000/getcardetails", null, {
-      params: { carName: carName },
-    });
+    const response = await axios.post(
+      "http://localhost:3000/getcardetails",
+      null,
+      {
+        params: { carName: carName },
+      }
+    );
     if (response.status === 200) {
-      return response.data;
+      return deleteLogInfoForModel(response.data.carDetails);
+
+      //return response.data.carDetails;
     } else {
       console.error("Request failed with status", response.status);
       return null;
@@ -54,3 +63,12 @@ export const getCarInformation = async (carName) => {
     throw error;
   }
 };
+
+function deleteLogInfoForModel(inputString) {
+  const firstLineBreakIndex = inputString.indexOf("\n");
+  if (firstLineBreakIndex !== -1) {
+    return inputString.substring(firstLineBreakIndex + 1);
+  } else {
+    return "";
+  }
+}
