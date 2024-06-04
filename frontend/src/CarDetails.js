@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { getCarInformation } from "./api";
+import LoadingBar from "./LoadingBar";
 
 function CarDetails({ car, handleBackButton }) {
   const [carInfo, setCarInfo] = useState("");
   const [showInfo, setShowInfo] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleGetInfo = async () => {
+    setLoading(true);
     try {
       const info = await getCarInformation(car);
       setCarInfo(info);
       setShowInfo(true);
     } catch (error) {
       console.error("Error getting car information:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -21,9 +26,7 @@ function CarDetails({ car, handleBackButton }) {
       <h2 className="selected-car-heading">Selected Car:</h2>
       <div className="car-details-container">
         <div className="car-name">
-          <p>
-            <strong>Name:</strong> {car}
-          </p>
+          <p>{car}</p>
         </div>
         <div className="button-row">
           <button className="back-button" onClick={handleBackButton}>
@@ -35,12 +38,13 @@ function CarDetails({ car, handleBackButton }) {
             </button>
           )}
         </div>
+        {loading && <LoadingBar />}
         {showInfo && (
-          <div className="car-info-textbox">
+          <div className="car-info-textbox" style={{ width: "100%" }}>
             <textarea
               value={carInfo}
               onChange={() => {}}
-              rows={6}
+              rows={20}
               style={{ width: "100%", boxSizing: "border-box" }}
               placeholder="Car Information"
               readOnly
