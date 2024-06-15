@@ -100,7 +100,7 @@ const GamePage = () => {
 
   return (
     <div className="game-container" ref={gameAreaRef}>
-      {!gameStarted && !gameWon && (
+      {!gameStarted && !gameOver && !gameWon && (
         <button className="start-button" onClick={startGame}>
           Start Game
         </button>
