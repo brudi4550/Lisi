@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./GamePage.css";
 import carImage from "./images/f1.png";
 import obstacleImage from "./images/blockade.png";
@@ -12,6 +12,7 @@ const GamePage = () => {
   const [level, setLevel] = useState(1);
   const [gameWon, setGameWon] = useState(false);
   const gameAreaRef = useRef(null);
+  const animationFrameId = useRef(null);
 
   const handleKeyDown = (e) => {
     if (gameOver || !gameStarted) return;
@@ -28,60 +29,64 @@ const GamePage = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [carPosition, gameOver, gameStarted]);
 
-  useEffect(() => {
-    if (!gameStarted || gameWon) return;
+  const gameLoop = useCallback(() => {
+    if (gameOver || !gameStarted || gameWon) return;
 
-    const gameInterval = setInterval(() => {
-      if (gameOver || gameWon) return;
+    setObstacles((prev) => {
+      const newObstacles = prev.map((obstacle) => ({
+        ...obstacle,
+        y: obstacle.y + (0.5 + level * 0.5),
+      }));
 
-      setObstacles((prev) => {
-        const newObstacles = prev.map((obstacle) => ({
-          ...obstacle,
-          y: obstacle.y + (5 + level),
-        }));
-
-        newObstacles.forEach((obstacle) => {
-          if (
-            obstacle.y >= 90 &&
-            obstacle.y <= 100 &&
-            Math.abs(obstacle.x - carPosition) < 10
-          ) {
-            console.log("Collision detected");
-            setGameOver(true);
-            setGameStarted(false);
-          }
-        });
-
-        const filteredObstacles = newObstacles.filter(
-          (obstacle) => obstacle.y < 100
-        );
-        if (Math.random() < 0.1 + level * 0.05) {
-          filteredObstacles.push({
-            x: Math.random() * 100,
-            y: 0,
-          });
+      newObstacles.forEach((obstacle) => {
+        if (
+          obstacle.y >= 90 &&
+          obstacle.y <= 100 &&
+          Math.abs(obstacle.x - carPosition) < 10
+        ) {
+          console.log("Collision detected");
+          setGameOver(true);
+          setGameStarted(false);
         }
-
-        setScore((prev) => {
-          const newScore = prev + 1;
-          console.log(`Score: ${newScore}`);
-          if (newScore >= 800) {
-            setGameWon(true);
-            setGameStarted(false);
-          } else if (newScore >= 500) {
-            setLevel(3);
-          } else if (newScore >= 200) {
-            setLevel(2);
-          }
-          return newScore;
-        });
-
-        return filteredObstacles;
       });
-    }, 200);
 
-    return () => clearInterval(gameInterval);
+      const filteredObstacles = newObstacles.filter(
+        (obstacle) => obstacle.y < 100
+      );
+      if (Math.random() < 0.02 + level * 0.01) {
+        filteredObstacles.push({
+          x: Math.random() * 100,
+          y: 0,
+        });
+      }
+
+      return filteredObstacles;
+    });
+
+    setScore((prev) => {
+      const newScore = prev + 1;
+      console.log(`Score: ${newScore}`);
+      if (newScore >= 800) {
+        setGameWon(true);
+        setGameStarted(false);
+      } else if (newScore >= 500) {
+        setLevel(3);
+      } else if (newScore >= 200) {
+        setLevel(2);
+      }
+      return newScore;
+    });
+
+    animationFrameId.current = requestAnimationFrame(gameLoop);
   }, [carPosition, gameOver, gameStarted, level, gameWon]);
+
+  useEffect(() => {
+    if (gameStarted && !gameWon && !gameOver) {
+      animationFrameId.current = requestAnimationFrame(gameLoop);
+    }
+
+    return () => cancelAnimationFrame(animationFrameId.current);
+  }, [gameStarted, gameWon, gameOver, gameLoop]);
 
   const startGame = () => {
     setCarPosition(50);
