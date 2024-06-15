@@ -78,7 +78,7 @@ const GamePage = () => {
 
         return filteredObstacles;
       });
-    }, 200); // Ein längeres Intervall für bessere Debugging
+    }, 200);
 
     return () => clearInterval(gameInterval);
   }, [carPosition, gameOver, gameStarted, level, gameWon]);
@@ -100,24 +100,43 @@ const GamePage = () => {
           Start Game
         </button>
       )}
-      {gameOver && <div className="game-over">Game Over! Score: {score}</div>}
+      {gameOver && (
+        <>
+          <div className="overlay"></div>
+          <div className="modal">
+            <div>Game Over! Score: {score}</div>
+            <button onClick={startGame}>Restart</button>
+          </div>
+        </>
+      )}
       {gameWon && (
-        <div className="game-won">
-          Congratulations! You've won a test drive with a leasing car!
-        </div>
+        <>
+          <div className="overlay"></div>
+          <div className="modal">
+            <div>
+              Congratulations! You've won a test drive with a leasing car!
+            </div>
+            <button onClick={startGame}>Restart</button>
+          </div>
+        </>
       )}
       <div
         className="car"
-        src={carImage}
-        style={{ left: `${carPosition}%` }}
+        style={{
+          left: `${carPosition}%`,
+          backgroundImage: `url(${carImage})`,
+        }}
         alt="Car"
       />
       {obstacles.map((obstacle, index) => (
         <div
-          src={obstacleImage}
           key={index}
           className="obstacle"
-          style={{ left: `${obstacle.x}%`, top: `${obstacle.y}%` }}
+          style={{
+            left: `${obstacle.x}%`,
+            top: `${obstacle.y}%`,
+            backgroundImage: `url(${obstacleImage})`,
+          }}
           alt="Obstacle"
         />
       ))}
