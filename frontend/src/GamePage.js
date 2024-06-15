@@ -13,6 +13,7 @@ const GamePage = () => {
   const [gameWon, setGameWon] = useState(false);
   const gameAreaRef = useRef(null);
   const animationFrameId = useRef(null);
+  const lastScoreUpdateTime = useRef(Date.now());
 
   const handleKeyDown = (e) => {
     if (gameOver || !gameStarted) return;
@@ -63,19 +64,24 @@ const GamePage = () => {
       return filteredObstacles;
     });
 
-    setScore((prev) => {
-      const newScore = prev + 1;
-      console.log(`Score: ${newScore}`);
-      if (newScore >= 800) {
-        setGameWon(true);
-        setGameStarted(false);
-      } else if (newScore >= 500) {
-        setLevel(3);
-      } else if (newScore >= 200) {
-        setLevel(2);
-      }
-      return newScore;
-    });
+    const now = Date.now();
+    const scoreInterval = 1000 / (1 + level * 0.2); // Adjust interval based on level (faster with higher levels)
+    if (now - lastScoreUpdateTime.current >= scoreInterval) {
+      setScore((prev) => {
+        const newScore = prev + 1;
+        console.log(`Score: ${newScore}`);
+        if (newScore >= 800) {
+          setGameWon(true);
+          setGameStarted(false);
+        } else if (newScore >= 500) {
+          setLevel(3);
+        } else if (newScore >= 200) {
+          setLevel(2);
+        }
+        return newScore;
+      });
+      lastScoreUpdateTime.current = now;
+    }
 
     animationFrameId.current = requestAnimationFrame(gameLoop);
   }, [carPosition, gameOver, gameStarted, level, gameWon]);
@@ -96,6 +102,7 @@ const GamePage = () => {
     setGameStarted(true);
     setLevel(1);
     setGameWon(false);
+    lastScoreUpdateTime.current = Date.now();
   };
 
   return (
