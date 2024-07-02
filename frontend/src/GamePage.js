@@ -30,6 +30,20 @@ const GamePage = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [carPosition, gameOver, gameStarted]);
 
+  const checkCollision = (car, obstacle) => {
+    const carWidth = 10; // assuming the car is 10% wide
+    const carHeight = 20; // assuming the car is 20% tall
+    const obstacleWidth = 10; // assuming the obstacle is 10% wide
+    const obstacleHeight = 10; // assuming the obstacle is 10% tall
+
+    return (
+      car.x < obstacle.x + obstacleWidth &&
+      car.x + carWidth > obstacle.x &&
+      car.y < obstacle.y + obstacleHeight &&
+      car.y + carHeight > obstacle.y
+    );
+  };
+
   const gameLoop = useCallback(() => {
     if (gameOver || !gameStarted || gameWon) return;
 
@@ -40,11 +54,8 @@ const GamePage = () => {
       }));
 
       newObstacles.forEach((obstacle) => {
-        if (
-          obstacle.y >= 90 &&
-          obstacle.y <= 100 &&
-          Math.abs(obstacle.x - carPosition) < 10
-        ) {
+        const car = { x: carPosition, y: 80 }; // assuming the car is always at y: 80%
+        if (checkCollision(car, obstacle)) {
           console.log("Collision detected");
           setGameOver(true);
           setGameStarted(false);
@@ -56,7 +67,7 @@ const GamePage = () => {
       );
       if (Math.random() < 0.02 + level * 0.01) {
         filteredObstacles.push({
-          x: Math.random() * 100,
+          x: Math.random() * 90, // Adjust to ensure the obstacle stays within bounds
           y: 0,
         });
       }
