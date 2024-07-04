@@ -1,19 +1,39 @@
-version: '1'
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+  backend:
+    build: ./backend
     ports:
-      - 8002:3002
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    env_file:
+      - ./.env
+    depends_on:
+      - llama3
+    environment:
+      - LLAMA3_API=http://llama3:${LLAMA3_PORT}
+      - PORT=${BACKEND_PORT}
+      - REPLICATE_API_KEY=${REPLICATE_API_KEY}
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     depends_on:
       - backend
+    env_file:
+      - ./.env
+    networks:
+      - app-network
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+  llama3:
+    build: ./llama3
     ports:
-      - 8001:3000
-    volumes:
-      - ./backend:/app
+      - "${LLAMA3_PORT}:${LLAMA3_PORT}"
+    env_file:
+      - ./.env
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
