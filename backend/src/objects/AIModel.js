@@ -6,7 +6,7 @@ import { Ollama } from "ollama-node";
 export default class AIModel {
   constructor() {
     this.replicate = new Replicate({
-      auth: process.env.API_KEY,
+      auth: process.env.REPLICATE_API_KEY,
     });
     this.ollama = new Ollama();
     this.ollama.setSystemPrompt(
@@ -105,9 +105,24 @@ export default class AIModel {
 
   async call_selfHost(prompt) {
     try {
-      await this.ollama.setModel("llama3");
-      const result = await this.ollama.generate(prompt);
-      return "SELFHOST \n" + result.output;
+      //const port = process.env.LLAMA3_PORT;
+      const response = await fetch(
+        "http://llama3:${process.env.LLAMA3_PORT}/generate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: prompt, max_length: 50 }), // adjust max_length as needed
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      return "SELFHOST \n" + result.generated_text;
     } catch (error) {
       console.error("Self-hosted model call failed:", error);
       throw new Error("Self-hosted model call failed");

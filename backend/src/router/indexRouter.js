@@ -80,7 +80,7 @@ router
       if (!recommendedCars.length)
         return res.status(400).json({ error: "No recommendations found" });
 
-      const csvFilePath = "qualityinsurance/qualitytable.csv";
+      const csvFilePath = "../qualityinsurance/qualitytable.csv";
       const searchResults = await searchCarsInCSV(recommendedCars, csvFilePath);
 
       return res.status(200).json({ recommendedCars, searchResults });
@@ -88,7 +88,7 @@ router
       console.log("Using dummy data due to API error");
       recommendedCars = [...dummyData.recommendedCars];
 
-      const csvFilePath = "qualityinsurance/qualitytable.csv";
+      const csvFilePath = "../qualityinsurance/qualitytable.csv";
       const searchResults = await searchCarsInCSV(recommendedCars, csvFilePath);
 
       return res.status(200).json({ recommendedCars, searchResults });
