@@ -2,10 +2,7 @@ import axios from "axios";
 
 export const fetchRecommendedCars = async (userData) => {
   try {
-    const response = await axios.get(
-      "http://localhost:3000/recommendations",
-      {}
-    );
+    const response = await axios.get("http://backend:3000/recommendations", {});
     return response.data.recommendedCars;
   } catch (error) {
     console.error("Error fetching recommended cars:", error);
@@ -15,7 +12,7 @@ export const fetchRecommendedCars = async (userData) => {
 
 export const sendUserDataToBackend = async (userData) => {
   try {
-    await axios.post("http://localhost:3000/user", null, {
+    await axios.post("http://backend:3000/user", null, {
       params: userData,
     });
   } catch (error) {
@@ -26,7 +23,7 @@ export const sendUserDataToBackend = async (userData) => {
 
 export const chatbotMessage = async (userInput) => {
   try {
-    const response = await axios.post("http://localhost:3000/refine", null, {
+    const response = await axios.post("http://backend:3000/refine", null, {
       params: { userInput },
     });
     if (response.status === 200) {
@@ -44,7 +41,7 @@ export const chatbotMessage = async (userInput) => {
 export const getCarInformation = async (carName) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/getcardetails",
+      "http://backend:3000/getcardetails",
       null,
       {
         params: { carName: carName },
