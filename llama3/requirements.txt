@@ -1,0 +1,7 @@
+Flask
+torch
+transformers
+python-dotenv
+SentencePiece
+accelerate
+huggingface_hub
